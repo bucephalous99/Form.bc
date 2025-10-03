@@ -298,14 +298,22 @@
             formData.append('domicilio', form.domicilio.value);
             formData.append('paisResidencia', form.paisResidencia.value);
 
-            const idFile = form.documentoID.files[0];
-            const poaFile = form.documentoPOA.files[0];
+            // Depuración: Imprimir los archivos seleccionados
+            console.log('Archivo documentoID:', form.documentoID.files[0]);
+            console.log('Archivo documentoPOA:', form.documentoPOA.files[0]);
 
-            if (idFile) {
-                formData.append('documentoID', idFile, idFile.name);
+            // Adjuntar los archivos al FormData
+            if (form.documentoID.files.length > 0) {
+                formData.append('documentoID', form.documentoID.files[0], form.documentoID.files[0].name);
             }
-            if (poaFile) {
-                formData.append('documentoPOA', poaFile, poaFile.name);
+
+            if (form.documentoPOA.files.length > 0) {
+                formData.append('documentoPOA', form.documentoPOA.files[0], form.documentoPOA.files[0].name);
+            }
+
+            // Depuración: Imprimir el contenido del FormData
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
             }
 
             const loader = document.getElementById('loader');
