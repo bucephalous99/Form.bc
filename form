@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding - Verificación de Documentos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #1f2937;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #6b7280;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+            font-size: 14px;
+        }
+        
+        .required {
+            color: #ef4444;
+        }
+        
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .file-wrapper {
+            position: relative;
+        }
+        
+        .file-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px;
+            background: #f3f4f6;
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .file-label:hover {
+            background: #e5e7eb;
+            border-color: #667eea;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .file-name {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            background: #5568d3;
+        }
+        
+        .submit-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        
+        .warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .warning p {
+            color: #92400e;
+            font-size: 13px;
+            margin: 0;
+        }
+        
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loader.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .info-box p {
+            color: #1e40af;
+            font-size: 12px;
+            margin: 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Proceso de Onboarding</h1>
+        <p class="subtitle">Complete el formulario y adjunte los documentos requeridos</p>
+        
+        <div class="warning">
+            <p>⚠️ Asegúrese de que los datos ingresados coincidan exactamente con los documentos adjuntos</p>
+        </div>
+
+        <div class="info-box">
+            <p><strong>📄 Documentos aceptados ID:</strong> Pasaporte, DNI/Cédula, Licencia de Conducir</p>
+            <p><strong>🏠 Documentos aceptados POA:</strong> Factura servicios públicos, Extracto bancario</p>
+        </div>
+        
+        <form id="onboardingForm">
+            <div class="form-group">
+                <label>Nombre <span class="required">*</span></label>
+                <input type="text" name="nombre" required placeholder="Ej: Juan">
+            </div>
+            
+            <div class="form-group">
+                <label>Apellido <span class="required">*</span></label>
+                <input type="text" name="apellido" required placeholder="Ej: Pérez">
+            </div>
+            
+            <div class="form-group">
+                <label>Fecha de Nacimiento <span class="required">*</span></label>
+                <input type="date" name="fechaNacimiento" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Domicilio <span class="required">*</span></label>
+                <input type="text" name="domicilio" required placeholder="Calle, número, ciudad">
+            </div>
+            
+            <div class="form-group">
+                <label>País de Residencia <span class="required">*</span></label>
+                <select name="paisResidencia" required>
+                    <option value="">Seleccione un país</option>
+                    <option value="Argentina">Argentina</option>
+                    <option value="Bolivia">Bolivia</option>
+                    <option value="Brasil">Brasil</option>
+                    <option value="Chile">Chile</option>
+                    <option value="Colombia">Colombia</option>
+                    <option value="Costa Rica">Costa Rica</option>
+                    <option value="Ecuador">Ecuador</option>
+                    <option value="España">España</option>
+                    <option value="México">México</option>
+                    <option value="Panamá">Panamá</option>
+                    <option value="Perú">Perú</option>
+                    <option value="Uruguay">Uruguay</option>
+                    <option value="Venezuela">Venezuela</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Documento de Identidad (ID) <span class="required">*</span></label>
+                <div class="file-wrapper">
+                    <input type="file" id="documentoID" name="documentoID" accept="image/*,.pdf" required>
+                    <label for="documentoID" class="file-label">
+                        <span>📄</span>
+                        <span>Seleccionar Pasaporte/DNI/Licencia</span>
+                    </label>
+                    <div class="file-name" id="idFileName"></div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Comprobante de Domicilio (POA) <span class="required">*</span></label>
+                <div class="file-wrapper">
+                    <input type="file" id="documentoPOA" name="documentoPOA" accept="image/*,.pdf" required>
+                    <label for="documentoPOA" class="file-label">
+                        <span>📄</span>
+                        <span>Seleccionar Factura/Contrato/Extracto</span>
+                    </label>
+                    <div class="file-name" id="poaFileName"></div>
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn">Enviar Documentos</button>
+        </form>
+        
+        <div class="loader" id="loader">
+            <div class="spinner"></div>
+            <p>Procesando documentos...</p>
+        </div>
+    </div>
+    
+    <script>
+        const WEBHOOK_URL = 'https://n8n-test-2025.duckdns.org/webhook/onbboarding';
+        
+        document.getElementById('documentoID').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || '';
+            document.getElementById('idFileName').textContent = fileName;
+        });
+        
+        document.getElementById('documentoPOA').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || '';
+            document.getElementById('poaFileName').textContent = fileName;
+        });
+        
+        document.getElementById('onboardingForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const form = this;
+            
+            formData.append('nombre', form.nombre.value);
+            formData.append('apellido', form.apellido.value);
+            formData.append('fechaNacimiento', form.fechaNacimiento.value);
+            formData.append('domicilio', form.domicilio.value);
+            formData.append('paisResidencia', form.paisResidencia.value);
+            
+            const idFile = form.documentoID.files[0];
+            const poaFile = form.documentoPOA.files[0];
+            
+            if (idFile) {
+                formData.append('documentoID', idFile, 'ID-' + idFile.name);
+            }
+            if (poaFile) {
+                formData.append('documentoPOA', poaFile, 'POA-' + poaFile.name);
+            }
+            
+            const loader = document.getElementById('loader');
+            form.style.display = 'none';
+            loader.classList.add('active');
+            
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
+                
+                const html = await response.text();
+                document.body.innerHTML = html;
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al procesar: ' + error.message);
+                form.style.display = 'block';
+                loader.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
